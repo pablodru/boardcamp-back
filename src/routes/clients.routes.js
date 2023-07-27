@@ -9,6 +9,6 @@ const clientsRouter = Router();
 clientsRouter.get('/customers', getCustomers);
 clientsRouter.get('/customers/:id', getCustomerById);
 clientsRouter.post('/customers', validateSchema(clientsSchema) , newCustomer);
-clientsRouter.put('/customers/:id', updateCustomer);
+clientsRouter.put('/customers/:id', validateSchema(clientsSchema), updateCustomer);
 
 export default clientsRouter;
