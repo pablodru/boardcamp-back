@@ -62,7 +62,7 @@ export async function newRent(req, res) {
 
 export async function finishRent(req, res) {
     const { id } = req.params;
-    const day = dayjs();
+    const day = dayjs().format('YYYY-MM-DD');
 
     try {
 
@@ -73,18 +73,16 @@ export async function finishRent(req, res) {
         if( rental.rows[0].returnDate !== null ) return res.senStatus(400);
 
         const { rentDate, daysRented, originalPrice } = rental.rows[0];
-        const delay = (daysRented - day.diff(rentDate, 'day'))
-        
-        console.log(delay)
+        const delay = (daysRented - dayjs().diff(rentDate, 'day'));
 
         const price = originalPrice / daysRented;
         const delayToPay = price * delay * (-1);
 
         await db.query(
-            `UPDATE rentals SET "returnDate"=${day}, "delayFee"=${delay>=0 ?  0 : delayToPay} WHERE id=$1;`, [id]
+            `UPDATE rentals SET "returnDate"='${day}', "delayFee"=${delay>=0 ?  0 : delayToPay} WHERE id=$1;`, [id]
         )
 
-        res.sendStatus(201);
+        res.sendStatus(200);
 
     } catch (err) {
         res.status(500).send(err.message);
