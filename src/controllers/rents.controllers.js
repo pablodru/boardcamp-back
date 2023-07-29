@@ -70,7 +70,7 @@ export async function finishRent(req, res) {
             `SELECT * FROM rentals WHERE rentals.id=$1;`, [id]
         );
         if( rental.rows.length === 0 ) return res.sendStatus(404);
-        if( rental.rows[0].returnDate !== null ) return res.senStatus(400);
+        if( rental.rows[0].returnDate !== null ) return res.sendStatus(400);
 
         const { rentDate, daysRented, originalPrice } = rental.rows[0];
         const delay = (daysRented - dayjs().diff(rentDate, 'day'));
