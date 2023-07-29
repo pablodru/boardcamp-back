@@ -92,7 +92,22 @@ export async function finishRent(req, res) {
 }
 
 export async function deleteRent(req, res) {
+    const { id } = req.params;
+
     try {
+
+        const existingRental = await db.query(
+            `SELECT id FROM rentals WHERE id=$1;`, [id]
+        );
+
+        if ( existingRental.rows.length === 0 ) return res.sendStatus(404);
+        if ( existingRental.rows[0].returnDate !== null ) return res.sendStatus(400);
+
+        await db.query(
+            `DELETE FROM rentals WHERE id=$1;`, [id]
+        );
+
+        res.sendStatus(200);
 
     } catch (err) {
         res.status(500).send(err.message);
