@@ -5,7 +5,7 @@ export async function getCustomers(req, res) {
     try {
 
         const customers = await db.query(
-            `SELECT * FROM customers;`
+            `SELECT id, name, phone, cpf, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday FROM customers;`
         )
 
         return res.status(200).send(customers.rows);
@@ -21,7 +21,7 @@ export async function getCustomerById(req, res) {
     try {
 
         const customer = await db.query(
-            `SELECT * FROM customers WHERE id=$1;`, [id]
+            `SELECT id, name, phone, cpf, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday FROM customers WHERE id=$1;`, [id]
         );
 
         if ( customer.rows.length === 0 ) return res.sendStatus(404);
